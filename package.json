@@ -1,0 +1,35 @@
+{
+  "name": "youtube-dl",
+  "version": "1.0.0",
+  "description": "A simple case of using ReactJS Redux Webpack SASS with api-platform",
+  "scripts": {
+    "webpack": "webpack -d",
+    "watch": "webpack -d --watch",
+    "build": "webpack -p"
+  },
+  "author": "Pat et Féfé",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.5.1",
+    "babel-loader": "^6.2.2",
+    "babel-plugin-istanbul": "^2.0.3",
+    "babel-plugin-transform-runtime": "^6.5.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.11.1",
+    "css-loader": "^0.28.4",
+    "eslint": "^2.13.1",
+    "eslint-plugin-react": "^6.4.0",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.16.1",
+    "react": "^15.3.1",
+    "react-bootstrap": "^0.31.1",
+    "react-dom": "^15.3.1",
+    "react-prop-types": "^0.4.0",
+    "webpack": "^2.7.0"
+  },
+  "devDependencies": {
+    "style-loader": "^0.18.2"
+  },
+  "main": "webpack.config.js"
+}
