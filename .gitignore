@@ -1,0 +1,13 @@
+#--------------------------
+#general
+#--------------------------
+*~
+.~*
+
+
+#node modules
+/node_modules
+/npm-debug.log
+
+
+/build/*
