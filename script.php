@@ -1,43 +1,33 @@
 <?php
 
-$entityBody = file_get_contents('php://input');
-
-//echo 'called';
-
-
-
-// string exec ( string $command [, array &$output [, int &$return_var ]] )
-
-$entityBody = file_get_contents('php://input');
-
-$request = json_decode($entityBody);
-
-// print_r($request); die;
-
+// get request data (POST)
+$requestBody = file_get_contents('php://input');
+$request = json_decode($requestBody);
 $url = $request->url;
 $mode = $request->mode;
 
-// downoad youtube video 
+// CLI exec vars for debug / errors
 $output = [];
 $return_var = 0;
-//$video = exec("youtube-dl --get-filename " . $url, $output, $return_var);
 
-// C:/Users/Josue/Downloads/%(title)s.%(ext)s
+// get video file name
+$videoFileName = exec("youtube-dl --get-filename " . $url, $output, $return_var);
 
-$video = exec('youtube-dl --output "./%(title)s.%(ext)s" ' . $url, $output, $return_var);
+// download video
+exec('youtube-dl --output "./%(title)s.%(ext)s" ' . $url, $output, $return_var);
 
-print_r($video);die;
+print_r($videoFileName);die;
 
 if ($mode != 'video') {
-
-    $path_parts = pathinfo($video);
-    $name =  $path_parts['filename'];
+    $path_parts = pathinfo($videoFileName);
+    // audio file name = video file name without extension
+    $audioFileName =  $path_parts['filename'];
     
-    echo $path_parts['dirname'], "\n";
+    /*echo $path_parts['dirname'], "\n";
     echo $path_parts['basename'], "\n";
     echo $path_parts['extension'], "\n";
-    echo $path_parts['filename'], "\n"; // depuis PHP 5.2.0
-    exec("ffmpeg -i " . $video . " -o " . $name . 'mp3');
+    echo $path_parts['filename'], "\n"; // depuis PHP 5.2.0*/
+    exec("ffmpeg -i " . $videoFileName . " -o " . $audioFileName . 'mp3');
 }
 
 // ffmpeg extract audio if asked
