@@ -37,7 +37,7 @@ class App extends Component {
       'Si ce n\'est aujourd\'hui, ce sera demain : rappelons-nous que la patience est le pilier de la sagesse.'
     ]
 
-    this.setState({processing: true})
+    this.setState(Object.assign(this.state, {processing: true}))
 
     fetch('http://localhost/youtube-downloader/script.php', myInit)
     .then((response) => {
@@ -48,11 +48,12 @@ class App extends Component {
       } else {
         console.log('error')
       }
-      this.setState({processing: false})      
+      
+      this.setState(Object.assign(this.state, {processing: false}))      
     })
     .then((blob) => {
       console.log('end')
-      this.setState({objectUrl: URL.createObjectURL(blob)})
+      this.setState(Object.assign(this.state, {objectUrl: URL.createObjectURL(blob)}))
     })
   }
 
