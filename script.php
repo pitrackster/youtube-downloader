@@ -6,74 +6,68 @@ $request = json_decode($requestBody);
 $url = $request->url;
 $mode = $request->mode;
 
-// CLI exec vars for debug / errors
-$output = [];
-$return_var = 0;
 
-// get video file name
-$videoFileName = exec("youtube-dl --get-filename " . $url, $output, $return_var);
+exec('youtube-dl --output "./downloaded/%(title)s.%(ext)s" ' . $url);
 
-// download video
-exec('youtube-dl --output "./%(title)s.%(ext)s" ' . $url, $output, $return_var);
-
-print_r($videoFileName);die;
-
-if ($mode != 'video') {
-    $path_parts = pathinfo($videoFileName);
-    // audio file name = video file name without extension
-    $audioFileName =  $path_parts['filename'];
-    
-    /*echo $path_parts['dirname'], "\n";
-    echo $path_parts['basename'], "\n";
-    echo $path_parts['extension'], "\n";
-    echo $path_parts['filename'], "\n"; // depuis PHP 5.2.0*/
-    exec("ffmpeg -i " . $videoFileName . " -o " . $audioFileName . 'mp3');
+$files = preg_grep('/^([^.])/', scandir('downloaded'));
+if ($mode !== 'video') {
+    foreach($files as $file){
+        $path_parts = pathinfo($file);
+        $encodedFileName =  $path_parts['filename'] . '.mp3';
+        $cmd = 'ffmpeg -i downloaded/' .$file. ' downloaded/' . $encodedFileName;
+        exec($cmd);
+    }
 }
 
-// ffmpeg extract audio if asked
+ // zip folder
+ $zipFile = './downloaded.zip';
+ $zip = new ZipArchive();
+ if($zip->open($zipFile, ZipArchive::CREATE) !== TRUE) {
+     exit('impossible d\'ouvrir l\'archive');
+ }
 
-// download video + extracted audio / video only / audio only
+ // update files variable
+ $files = preg_grep('/^([^.])/', scandir('downloaded'));
 
-// zip files if needed
+ // add files to zip
+ foreach($files as $file){
+    $path_parts = pathinfo($file);
+    // test extension if needed
+    if($mode !== 'both') {
+        $ext = $path_parts['extension'];
+        $video_formats = ['mp4', 'webm', 'mkv', '3gp'];
+        if($mode === 'video' && in_array($ext, $video_formats)){
+            $zip->addFile('downloaded/' . $file);
+        } elseif($mode === 'audio' && $ext === 'mp3') {
+            $zip->addFile('downloaded/' . $file);
+        }
+    } else {
+        $zip->addFile('downloaded/' . $file);
+    }    
+ }
 
-// readfile
+ $zipSuccessFull = $zip->close();
 
-$file = 'Igorrr_ieuD.mp4';
+ // remove downloaded and extracted files
+ foreach($files as $file){
+     unlink('downloaded/' . $file);
+ }
 
-if (file_exists($file)) {
+// send zip as file
+if (file_exists($zipFile)) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="'.basename($file).'"');
+    header('Content-Disposition: attachment; filename="'.basename($zipFile).'"');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
-    header('Content-Length: ' . filesize($file));
-    readfile($file);
-    exit;
+    header('Content-Length: ' . filesize($zipFile));
+    readfile($zipFile);
 } else {
     die("Error: File not found.");
-} 
-
-
-/*
-
-
-$zip = new ZipArchive();
-$filename = "./test112.zip";
-
-if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
-    exit("Impossible d'ouvrir le fichier <$filename>\n");
 }
 
-$zip->addFromString("testfilephp.txt" . time(), "#1 Ceci est une chaîne texte, ajoutée comme testfilephp.txt.\n");
-$zip->addFromString("testfilephp2.txt" . time(), "#2 Ceci est une chaîne texte, ajoutée comme testfilephp2.txt.\n");
-$zip->addFile($thisdir . "/too.php","/testfromfile.php");
-echo "Nombre de fichiers : " . $zip->numFiles . "\n";
-echo "Statut :" . $zip->status . "\n";
-$zip->close();
-
-*/
-
-
+// delete zip file
+unlink($zipFile);
 
 ?>

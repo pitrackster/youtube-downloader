@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { PropTypes as T } from 'prop-types'
+import { Modal } from 'react-bootstrap'
 
 // https://www.youtube.com/watch?v=rEuMAqfuCrI
 
@@ -11,7 +12,8 @@ class App extends Component {
         url: '',
         mode: 'audio'
       },
-      objectUrl:null
+      objectUrl:null,
+      processing: false
     }
 
     this.getFile = this.getFile.bind(this)
@@ -25,7 +27,19 @@ class App extends Component {
       body: JSON.stringify(this.state.requestData)
     }
 
-    fetch('http://localhost/Utube-dl/script.php', myInit)
+    this.words = [
+      'Au bout de la patience, il y a le ciel.',
+      'La patience est l\'art d\'espérer.',
+      'La patience peut faire germer des pierres à condition de savoir attendre.',
+      'La patience est une fleur qui ne pousse pas dans tous les jardins.',
+      'La patience a beaucoup plus de pouvoir que la force.',
+      'Si vous avez un peu de patience, vous découvrirez qu\'on peut utiliser les immenses ressources du Web pour perdre son temps avec une efficacité que vous n\'aviez jamais osé imaginer.',
+      'Si ce n\'est aujourd\'hui, ce sera demain : rappelons-nous que la patience est le pilier de la sagesse.'
+    ]
+
+    this.setState({processing: true})
+
+    fetch('http://localhost/youtube-downloader/script.php', myInit)
     .then((response) => {
       this.setState({url: ''})
       if (response.ok) {
@@ -34,7 +48,7 @@ class App extends Component {
       } else {
         console.log('error')
       }
-      
+      this.setState({processing: false})      
     })
     .then((blob) => {
       console.log('end')
@@ -44,7 +58,7 @@ class App extends Component {
 
   onDownload(){
     URL.revokeObjectURL(this.state.objectUrl)
-    this.setState({requestData: null, objectUrl: null})
+    this.setState({requestData: null, objectUrl: null, processing:false})
   }
 
   render() {
@@ -98,14 +112,28 @@ class App extends Component {
           </label>
         </div>
         
-        <button disabled={!this.state.requestData || this.state.requestData.url === ''} onClick={this.getFile} className="btn btn-default">Envoyer</button>
+        <button disabled={!this.state.requestData || this.state.requestData.url === ''} onClick={() => this.getFile()} className="btn btn-default">Envoyer</button>
         
         {this.state.objectUrl !== null && 
           <div>
             <hr/>
-            <a href={this.state.objectUrl} download="archive.zip">Télécharger</a>
+            <a href={this.state.objectUrl} download="from_youtube.zip">Télécharger</a>
           </div>
         }  
+
+        <Modal show={this.state.processing}>
+          <Modal.Header>
+            <Modal.Title>Veuillez patienter... ça peut prendre du temps!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row"> 
+              <div className="col-md-12" style={{textAlign:'center'}}>
+                <div className="fa fa-refresh fa-spin fa-3x fa-fw"></div>
+                <span className="sr-only">Loading...</span>   
+              </div>                
+            </div>                   
+          </Modal.Body>
+        </Modal>     
       </div>
       
     )
