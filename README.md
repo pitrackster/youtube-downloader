@@ -20,6 +20,10 @@ This app is intended for my personal use:
 
 `npm install && npm run webpack`
 
+`sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX downloaded/  zipped/`
+`sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX downloaded/  zipped/`
+
+
 ### Scripts
 
 - `npm run webpack` - build javascript

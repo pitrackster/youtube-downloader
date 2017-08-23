@@ -14,13 +14,13 @@ if ($mode !== 'video') {
     foreach($files as $file){
         $path_parts = pathinfo($file);
         $encodedFileName =  $path_parts['filename'] . '.mp3';
-        $cmd = 'ffmpeg -i downloaded/' .$file. ' downloaded/' . $encodedFileName;
+        $cmd = 'avconv -i downloaded/' .$file. ' downloaded/' . $encodedFileName;
         exec($cmd);
     }
 }
 
  // zip folder
- $zipFile = './downloaded.zip';
+ $zipFile = './zipped/downloaded.zip';
  $zip = new ZipArchive();
  if($zip->open($zipFile, ZipArchive::CREATE) !== TRUE) {
      exit('impossible d\'ouvrir l\'archive');
