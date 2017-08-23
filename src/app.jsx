@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { PropTypes as T } from 'prop-types'
 import { Modal } from 'react-bootstrap'
 
 // https://www.youtube.com/watch?v=rEuMAqfuCrI
@@ -41,7 +40,8 @@ class App extends Component {
 
     fetch('http://localhost/youtube-downloader/script.php', myInit)
     .then((response) => {
-      this.setState({url: ''})
+      this.setState(Object.assign(this.state.requestData, {url: ''}))
+      this.setState(Object.assign(this.state, {processing: false})) 
       if (response.ok) {
         console.log('success')
         return response.blob()
@@ -49,7 +49,7 @@ class App extends Component {
         console.log('error')
       }
       
-      this.setState(Object.assign(this.state, {processing: false}))      
+         
     })
     .then((blob) => {
       console.log('end')
@@ -73,7 +73,6 @@ class App extends Component {
             value={this.state.requestData.url} 
             placeholder="entrer une URL youtube (pas un lien de partage)" />
         </div>
-
         <div className="radio">
           <label>
             <input 
@@ -135,14 +134,9 @@ class App extends Component {
             </div>                   
           </Modal.Body>
         </Modal>     
-      </div>
-      
+      </div>      
     )
   }
 }
-
-App.propTypes = {}
-
-
 
 export default App

@@ -1,14 +1,41 @@
 # youtube-downloader
 
-- download youtube video by providing an url
-- choose to download audio / video + audio / video
+Download youtube video by providing an url. 
 
+You can choose to download audio / video + audio / video.
 
-### scripts
+This app basically provide a (very) simple web interface to youtub-dl CLI
 
-- npm install - install packages
-- npm run webpack - compile js sources
-- npm run watch - compile js sources and watch for changes
+The video or audio will be downloaded with the best format available (which means large data to download)
+
+The zip created is sent as blob to the client... nothing live on the server after the end of the process.
+
+This app is intended for my personal use:
+- no error handled
+- no control of any input
+- not many options
+- no internationalisation (language used in UI is french)
+
+### Install
+
+`npm install && npm run webpack`
+
+### Scripts
+
+- `npm run webpack` - build javascript
+- `npm run watch` - build javascript and watch for changes
+
+### Warnings
+
+The process might take a long time depending on :
+
+- your connection speed
+- the length of the video you want to download
+- your server configuration
+
+### TODO
+
+Handle errors, check inputs and give feedback to users ;-)
 
 ### uses :
 
