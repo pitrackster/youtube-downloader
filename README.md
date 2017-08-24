@@ -20,8 +20,12 @@ This app is intended for my personal use:
 
 `npm install && npm run webpack`
 
-`sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX downloaded/  zipped/`
-`sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX downloaded/  zipped/`
+> Set proper rights to downloaded and zipped folders
+
+`sudo setfacl -R -m u:www-data:rwX downloaded/ zipped/`
+
+
+`sudo setfacl -dR -m u:www-data:rwX downloaded/ zipped/`
 
 
 ### Scripts
@@ -45,4 +49,4 @@ Handle errors, check inputs and give feedback to users ;-)
 
 - react
 - youtube-dl
-- ffmpeg
+- avconv (because it works out of the box with my raspberry pi while ffmpeg don't)
