@@ -6,7 +6,6 @@ $request = json_decode($requestBody);
 $url = $request->url;
 $mode = $request->mode;
 
-
 exec('youtube-dl --output "./downloaded/%(title)s.%(ext)s" ' . $url);
 
 $files = preg_grep('/^([^.])/', scandir('downloaded'));
@@ -14,7 +13,7 @@ if ($mode !== 'video') {
     foreach($files as $file){
         $path_parts = pathinfo($file);
         $encodedFileName =  $path_parts['filename'] . '.mp3';
-        $cmd = 'avconv -i downloaded/' .$file. ' downloaded/' . $encodedFileName;
+        $cmd = 'avconv -i "downloaded/' .$file. '" "downloaded/' . $encodedFileName . '"';
         exec($cmd);
     }
 }
@@ -69,5 +68,7 @@ if (file_exists($zipFile)) {
 
 // delete zip file
 unlink($zipFile);
+
+die('end');
 
 ?>

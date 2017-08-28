@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Modal } from 'react-bootstrap'
 
-// https://www.youtube.com/watch?v=rEuMAqfuCrI
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -11,7 +9,7 @@ class App extends Component {
         url: '',
         mode: 'audio'
       },
-      objectUrl:null,
+      objectUrl: null,
       processing: false
     }
 
@@ -38,28 +36,25 @@ class App extends Component {
 
     this.setState(Object.assign(this.state, {processing: true}))
 
-    fetch('http://localhost/youtube-downloader/script.php', myInit)
+    fetch('./script.php', myInit)
     .then((response) => {
-      this.setState(Object.assign(this.state.requestData, {url: ''}))
-      this.setState(Object.assign(this.state, {processing: false})) 
       if (response.ok) {
         console.log('success')
         return response.blob()
       } else {
-        console.log('error')
+        console.log('error', response)
+        this.setState(Object.assign(this.state, {processing: false})) 
       }
-      
-         
     })
     .then((blob) => {
       console.log('end')
-      this.setState(Object.assign(this.state, {objectUrl: URL.createObjectURL(blob)}))
+      this.setState(Object.assign(this.state, {processing: false, objectUrl: window.URL.createObjectURL(blob)}))
     })
   }
 
   onDownload(){
-    URL.revokeObjectURL(this.state.objectUrl)
-    this.setState({requestData: null, objectUrl: null, processing:false})
+    window.URL.revokeObjectURL(this.state.objectUrl)
+    this.setState({requestData: {url: '', mode: 'audio'}, objectUrl: null, processing: false})
   }
 
   render() {
@@ -117,7 +112,7 @@ class App extends Component {
         {this.state.objectUrl !== null && 
           <div>
             <hr/>
-            <a href={this.state.objectUrl} download="from_youtube.zip">Télécharger</a>
+            <a href={this.state.objectUrl} download="media.zip">Télécharger</a>
           </div>
         }  
 
