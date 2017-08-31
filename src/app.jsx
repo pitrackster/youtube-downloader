@@ -52,9 +52,9 @@ class App extends Component {
     })
   }
 
-  onDownload(){
-    window.URL.revokeObjectURL(this.state.objectUrl)
+  onDownload(){    
     this.setState({requestData: {url: '', mode: 'audio'}, objectUrl: null, processing: false})
+    // window.URL.revokeObjectURL(this.state.objectUrl)
   }
 
   render() {
@@ -106,15 +106,22 @@ class App extends Component {
               Télécharger la vidéo et l'audio dans un fichier séparé (mp3 256Kb/s)
           </label>
         </div>
-        
-        <button disabled={!this.state.requestData || this.state.requestData.url === ''} onClick={() => this.getFile()} className="btn btn-default">Envoyer</button>
-        
-        {this.state.objectUrl !== null && 
-          <div>
-            <hr/>
-            <a href={this.state.objectUrl} download="media.zip">Télécharger</a>
-          </div>
-        }  
+        <hr/>
+        <div className="row">
+            <div className="col-md-6 text-left">
+              {this.state.objectUrl !== null && 
+                <a href={this.state.objectUrl} className="btn btn-primary" onClick={() => this.onDownload()} download="media.zip">
+                  <i aria-hidden="true" className="fa fa-download"></i>
+                  &nbsp;Télécharger
+                 </a>
+              }  
+            </div>
+            <div className="col-md-6 text-right">
+              <button disabled={!this.state.requestData || this.state.requestData.url === ''} onClick={() => this.getFile()} className="btn btn-default">
+                <i aria-hidden="true" className="fa fa-gear"></i>&nbsp;Go!
+              </button> 
+            </div>
+        </div>        
 
         <Modal show={this.state.processing}>
           <Modal.Header>

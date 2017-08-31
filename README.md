@@ -24,9 +24,7 @@ This app is intended for my personal use:
 
 `sudo setfacl -R -m u:www-data:rwX downloaded/ zipped/`
 
-
 `sudo setfacl -dR -m u:www-data:rwX downloaded/ zipped/`
-
 
 ### Scripts
 
@@ -43,10 +41,22 @@ The process might take a long time depending on :
 
 ### TODO
 
-Handle errors, check inputs and give feedback to users ;-)
+- Create components instead of a "All in One" main component
 
-### uses :
+- Handle errors, check inputs and give feedback to users
 
-- react
+- Also find a way to revoke objectUrl created (can not do that before download ends) ...
+
+> See that : https://github.com/whatwg/html/issues/954
+
+### Uses
+
+- reactJS
 - youtube-dl
 - avconv (because it works out of the box with my raspberry pi while ffmpeg don't)
+
+### Maintenance
+
+Since youtube is changing the way videos are available an update of youtube-dl might be usefull
+
+> As I installed youtube-dl with pip for me it's just `sudo pip install --upgrade youtube-dl`
